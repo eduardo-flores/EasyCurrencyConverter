@@ -6,7 +6,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "symbols")
-public class Symbols {
+public class Symbol {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "code")
@@ -15,7 +15,7 @@ public class Symbols {
     @ColumnInfo(name = "name")
     private String name;
 
-    public Symbols(@NonNull String code, String name) {
+    public Symbol(@NonNull String code, String name) {
         this.code = code;
         this.name = name;
     }

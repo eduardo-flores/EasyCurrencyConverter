@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/margin_small"
+    android:minHeight="70dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_currency"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:background="@drawable/border"
+            android:src="@drawable/eur"
+            android:textAppearance="?attr/textAppearanceListItem"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/currency_value"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_medium"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:text="@string/default_value"
+            android:textAlignment="textEnd"
+            android:textAppearance="?attr/textAppearanceListItem"
+            app:layout_constraintBottom_toBottomOf="@id/iv_currency"
+            app:layout_constraintEnd_toStartOf="@id/iv_refresh"
+            app:layout_constraintTop_toTopOf="@id/iv_currency"
+            tools:ignore="LabelFor" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_refresh"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_small"
+            android:src="@drawable/ic_refresh_black_24dp"
+            android:textAppearance="?attr/textAppearanceListItem"
+            app:layout_constraintBottom_toBottomOf="@id/iv_currency"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_currency" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

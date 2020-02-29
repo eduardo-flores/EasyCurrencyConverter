@@ -8,15 +8,18 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.flores.easycurrencyconverter.data.model.Symbols;
+import com.flores.easycurrencyconverter.data.model.Rate;
+import com.flores.easycurrencyconverter.data.model.Symbol;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Symbols.class}, version = 1, exportSchema = false)
+@Database(entities = {Symbol.class, Rate.class}, version = 1, exportSchema = false)
 public abstract class RoomDatabase extends androidx.room.RoomDatabase {
 
-    public abstract SymbolsDao symbolsDao();
+    public abstract SymbolDao symbolsDao();
+
+    public abstract RateDao rateDao();
 
     private static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseWriteExecutor =

@@ -59,5 +59,4 @@ public class Converter implements Serializable {
     public void setRates(Map<String, Double> rates) {
         this.rates = rates;
     }
-
 }

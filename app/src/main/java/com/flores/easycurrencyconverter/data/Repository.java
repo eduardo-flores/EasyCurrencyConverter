@@ -8,7 +8,8 @@ import androidx.lifecycle.LiveData;
 
 import com.flores.easycurrencyconverter.data.database.RoomDatabase;
 import com.flores.easycurrencyconverter.data.model.Converter;
-import com.flores.easycurrencyconverter.data.model.Symbols;
+import com.flores.easycurrencyconverter.data.model.Rate;
+import com.flores.easycurrencyconverter.data.model.Symbol;
 import com.flores.easycurrencyconverter.data.model.SymbolsAPI;
 import com.flores.easycurrencyconverter.data.webservice.NetworkDataSource;
 
@@ -51,12 +52,12 @@ public class Repository {
         mNetworkDataSource.fetchCurrency();
     }
 
-    public LiveData<List<Symbols>> getSymbols() {
+    public LiveData<List<Symbol>> getSymbols() {
         return mRoomDatabase.symbolsDao().getSymbols();
     }
 
-    public void insertSymbols(Symbols symbols) {
-        RoomDatabase.databaseWriteExecutor.execute(() -> mRoomDatabase.symbolsDao().insert(symbols));
+    public void insertSymbol(Symbol symbol) {
+        RoomDatabase.databaseWriteExecutor.execute(() -> mRoomDatabase.symbolsDao().insert(symbol));
     }
 
     public void deleteAllSymbols() {
@@ -70,4 +71,17 @@ public class Repository {
     public void fetchSymbolsAPI() {
         mNetworkDataSource.fetchSymbolsAPI();
     }
+
+    public LiveData<List<Rate>> getRates() {
+        return mRoomDatabase.rateDao().getRate();
+    }
+
+    public void insertRate(Rate rate) {
+        RoomDatabase.databaseWriteExecutor.execute(() -> mRoomDatabase.rateDao().insert(rate));
+    }
+
+    public void deleteAllRates() {
+        RoomDatabase.databaseWriteExecutor.execute(() -> mRoomDatabase.rateDao().deleteAll());
+    }
+
 }

@@ -1,13 +1,19 @@
 package com.flores.easycurrencyconverter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.flores.easycurrencyconverter.data.Repository;
 import com.flores.easycurrencyconverter.data.model.Converter;
-import com.flores.easycurrencyconverter.data.model.Symbols;
+import com.flores.easycurrencyconverter.data.model.Rate;
+import com.flores.easycurrencyconverter.data.model.Symbol;
+import com.flores.easycurrencyconverter.util.ResourcesUtil;
 import com.flores.easycurrencyconverter.util.SimpleIdlingResource;
 import com.flores.easycurrencyconverter.viewmodel.MainActivityViewModel;
 import com.flores.easycurrencyconverter.viewmodel.MainViewModelFactory;
@@ -32,9 +40,13 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private SimpleItemRecyclerViewAdapter mAdapter;
     private Converter mConverter;
-    private List<Symbols> mSymbolsList;
+    private List<Symbol> mSymbols;
+    private List<Rate> mRates;
+
     private ProgressBar mLoadingIndicator;
     private RecyclerView mRecyclerView;
+    private ImageView mRefresh;
+    private EditText mBaseValue;
 
     private MainActivityViewModel mViewModel;
 
@@ -51,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
 
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
+        mRefresh = findViewById(R.id.iv_refresh);
+
+        mBaseValue = findViewById(R.id.currency_value);
+
         mRecyclerView = findViewById(R.id.rv_list_item);
         mAdapter = new SimpleItemRecyclerViewAdapter();
         mRecyclerView.setAdapter(mAdapter);
@@ -65,41 +81,64 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void bindUI() {
-        mViewModel.getCurrency().observe(this, converter -> {
-            mConverter = converter;
+        mViewModel.getRates().observe(this, rates -> {
+            mRates = rates;
             showData();
             getIdlingResource().setIdleState(true);
         });
 
-        mViewModel.getSymbols().observe(this, symbolsList -> {
-            mSymbolsList = symbolsList;
+        mViewModel.getCurrency().observe(this, converter -> mConverter = converter);
+
+        mViewModel.getSymbols().observe(this, (List<Symbol> symbolsList) -> {
+            mSymbols = symbolsList;
             if (symbolsList.size() == 0 && !callSymbolsAPI) {
                 mViewModel.fetchSymbolsAPI();
                 callSymbolsAPI = true;
             } else {
-                ((TextView) findViewById(R.id.tv_text)).setText(String.format("%s - %s", mSymbolsList.get(0).getCode(), mSymbolsList.get(0).getName()));
+                mAdapter.updateSymbols(symbolsList);
             }
         });
 
         mViewModel.getSymbolsAPI().observe(this, symbolsAPI -> {
             for (String key : symbolsAPI.getSymbols().keySet()) {
-                mViewModel.insertSymbols(new Symbols(key, symbolsAPI.getSymbols().get(key)));
+                mViewModel.insertSymbol(new Symbol(key, symbolsAPI.getSymbols().get(key)));
             }
+        });
+
+        mBaseValue.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                mBaseValue.clearFocus();
+                calculateNewConversion("EUR", mBaseValue.getText().toString());
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                assert imm != null;
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                return true;
+            }
+            return false;
         });
     }
 
-    private void showData() {
-        mAdapter.updateValues(mConverter);
-//        if (mConverter != null && mConverter.size() != 0) showDataView();
-//        else showLoading();
-        String text = "";
-        for (String key : mConverter.getRates().keySet()) {
-            text += key + " - " + mConverter.getRates().get(key);
+    private void calculateNewConversion(String newBase, String newBaseValue) {
+        Double baseValue = Double.valueOf(newBaseValue);
+        // conversion will be (baseValue * eurvalue / oldBaseValue);
+        Double conversion = baseValue * mConverter.getRates().get(MainActivityViewModel.EUR_CODE) / mConverter.getRates().get(newBase);
 
+        mViewModel.deleteAllRates();
+
+        for (String key : mConverter.getRates().keySet()) {
+            mViewModel.insertRate(new Rate(key, mConverter.getRates().get(key) * conversion, key.equals(newBase)));
         }
-        ((TextView) findViewById(R.id.tv_text)).setText(text);
-//        ((TextView) findViewById(R.id.tv_text)).setText(mConverter.getDate());
-        if (mConverter != null) showDataView();
+    }
+
+    private void showData() {
+        mAdapter.updateValues(mRates);
+        for (Rate rate :
+                mRates) {
+            if (rate.isBase()) {
+                mBaseValue.setText(String.format("%.2f", rate.getValue()));
+            }
+        }
+        if (mRates != null) showDataView();
         else showLoading();
     }
 
@@ -119,24 +158,50 @@ public class MainActivity extends AppCompatActivity {
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final View.OnClickListener mOnClickListener = view -> {
-////            Map item = (Co) view.getTag();
-//            Context context = view.getContext();
-//            Intent intent = new Intent(context, ItemListActivity.class);
-//            intent.putExtra(ARG_RECIPE, item);
-//
-//            context.startActivity(intent);
+        private final View.OnClickListener mShareOnClickListener = view -> {
+            Context context = view.getContext();
+            String shareBody = (String) view.getTag();
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, context.getResources().getString(R.string.share_subject));
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+            context.startActivity(Intent.createChooser(sharingIntent, context.getResources().getString(R.string.share_using)));
         };
-        private List<Double> mValues;
-        private List<String> mKeys;
+        private final View.OnClickListener mOnClickListener = view -> {
+            Context context = view.getContext();
+
+            Rate rate = (Rate) view.getTag();
+
+            Toast.makeText(context, rate.getCode(), Toast.LENGTH_SHORT).show();
+
+        };
+        private String base;
+        private Double baseValue;
+        private List<Rate> mValues;
+        private List<Symbol> mSymbols;
 
         SimpleItemRecyclerViewAdapter() {
         }
 
-        void updateValues(Converter values) {
-            if (values != null && values.getRates() != null) {
-                mValues = new ArrayList<>(values.getRates().values());
-                mKeys = new ArrayList<>(values.getRates().keySet());
+        void updateValues(List<Rate> values) {
+            if (values != null) {
+                mValues = new ArrayList<>();
+                for (Rate rate : values) {
+                    if (rate.isBase()) {
+                        base = rate.getCode();
+                        baseValue = rate.getValue();
+                    } else {
+                        mValues.add(rate);
+                    }
+
+                }
+                notifyDataSetChanged();
+            }
+        }
+
+        void updateSymbols(List<Symbol> symbols) {
+            if (symbols != null && symbols.size() > 0) {
+                mSymbols = symbols;
                 notifyDataSetChanged();
             }
         }
@@ -151,17 +216,34 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
-            holder.mContentView.setText(String.format("%s %s", mKeys.get(position), mValues.get(position)));
-
-            // Load image if it exists
-//            if (!TextUtils.isEmpty(mValues.get(position).getImage())) {
-//                Picasso.get()
-//                        .load(mValues.get(position).getImage())
-//                        .placeholder(R.drawable.ic_book)
-//                        .into(holder.mImageView);
-//            }
-            holder.itemView.setTag(mValues.get(position));
+            holder.mCurrencyName.setText(getSymbol(mValues.get(position).getCode()));
+            holder.mCurrencyValue.setText(String.format("%.4f", mValues.get(position).getValue()));
+            holder.mImageView.setImageResource(ResourcesUtil.getResourceByName(R.drawable.class, mValues.get(position).getCode().toLowerCase()));
+            Context context = holder.mShare.getContext();
+            holder.itemView.setTag(new Rate(mValues.get(position).getCode(), mValues.get(position).getValue(), true));
             holder.itemView.setOnClickListener(mOnClickListener);
+
+            holder.mShare.setTag(String.format(
+                    context.getResources().getString(R.string.share_message)
+                    , getSymbol(base)
+                    , baseValue
+                    , getSymbol(mValues.get(position).getCode())
+                    , mValues.get(position).getValue())
+            );
+            holder.mShare.setOnClickListener(mShareOnClickListener);
+        }
+
+        private String getSymbol(String code) {
+            String result = code;
+            if (mSymbols != null) {
+                for (Symbol symbol : mSymbols) {
+                    if (code.equals(symbol.getCode())) {
+                        result = symbol.getName();
+                        break;
+                    }
+                }
+            }
+            return result;
         }
 
         @Override
@@ -172,13 +254,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            final TextView mContentView;
+            final TextView mCurrencyName;
+            final TextView mCurrencyValue;
             final ImageView mImageView;
+            final ImageView mShare;
 
             ViewHolder(View view) {
                 super(view);
-                mContentView = view.findViewById(R.id.currency_name);
+                mCurrencyName = view.findViewById(R.id.tv_currency_name);
+                mCurrencyValue = view.findViewById(R.id.tv_currency_value);
                 mImageView = view.findViewById(R.id.iv_place_holder);
+                mShare = view.findViewById(R.id.iv_share);
             }
         }
     }

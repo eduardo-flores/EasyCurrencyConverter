@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Easy Currency Converter</string>
+    <string name="default_value">1.00</string>
+    <string name="delete">remove</string>
+    <string name="share_using">Share via</string>
+    <string name="share_subject">Look at this exchange rate.</string>
+    <string name="share_message">I am using Easy Currency Converter and I want to share with you this currency exchange from %s %.2f to %s %.2f.</string>
 </resources>
