@@ -9,8 +9,7 @@
     <string name="menu_favorite">Favorite</string>
     <string name="menu_custom">Customize Currency</string>
     <string name="menu_about">About</string>
-    <string name="toast_favorite_enable">Widget enabled</string>
-    <string name="toast_favorite_disable">Widget disabled</string>
+    <string name="toast_favorite_changed">Widget enabled/disable</string>
     <string name="dialog_custom_title">Customize Currencies</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_confirm">Confirm</string>
