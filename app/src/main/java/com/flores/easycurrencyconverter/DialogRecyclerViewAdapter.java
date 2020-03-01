@@ -21,18 +21,10 @@ public class DialogRecyclerViewAdapter
     private List<String> mCodes;
     private View.OnClickListener mOnClickListener = view -> {
         String c = (String) view.getTag();
-        CheckBox checkBox = view.findViewById(R.id.cb_currency);
-        checkBox.setChecked(!checkBox.isChecked());
-        boolean found = false;
-        for (String code : mCodes) {
-            if (code.equals(c)) {
-                found = true;
-                if (!checkBox.isChecked()) {
-                    mCodes.remove(code);
-                }
-            }
-        }
-        if (!found) {
+        CheckBox checkBox = (CheckBox) view;
+        if (!checkBox.isChecked()) {
+            mCodes.remove(c);
+        } else {
             mCodes.add(c);
         }
     };
@@ -74,8 +66,8 @@ public class DialogRecyclerViewAdapter
         holder.mCheckBox.setText(mValues.get(position).getName());
         holder.mCheckBox.setChecked(mCodes.contains(mValues.get(position).getCode()));
 
-        holder.itemView.setTag(mValues.get(position).getCode());
-        holder.itemView.setOnClickListener(mOnClickListener);
+        holder.mCheckBox.setTag(mValues.get(position).getCode());
+        holder.mCheckBox.setOnClickListener(mOnClickListener);
     }
 
     @Override

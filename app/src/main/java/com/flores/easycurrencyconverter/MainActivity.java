@@ -142,7 +142,8 @@ public class MainActivity extends AppCompatActivity {
             if (mBaseRate == null) {
                 mBaseRate = mViewModel.getDefaultRate();
             }
-            calculateNewConversion(mBaseRate.getCode(), mBaseRate.getValue());
+            if (mConverter.getSuccess())
+                calculateNewConversion(mBaseRate.getCode(), mBaseRate.getValue());
         });
 
         mViewModel.getSymbols().observe(this, (List<Symbol> symbolsList) -> {
