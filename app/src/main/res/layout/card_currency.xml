@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_currency"
+            android:id="@+id/iv_base_flag"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_small"
@@ -34,9 +34,9 @@
             android:text="@string/default_value"
             android:textAlignment="textEnd"
             android:textAppearance="?attr/textAppearanceListItem"
-            app:layout_constraintBottom_toBottomOf="@id/iv_currency"
+            app:layout_constraintBottom_toBottomOf="@id/iv_base_flag"
             app:layout_constraintEnd_toStartOf="@id/iv_refresh"
-            app:layout_constraintTop_toTopOf="@id/iv_currency"
+            app:layout_constraintTop_toTopOf="@id/iv_base_flag"
             tools:ignore="LabelFor" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -46,9 +46,9 @@
             android:layout_margin="@dimen/margin_small"
             android:src="@drawable/ic_refresh_black_24dp"
             android:textAppearance="?attr/textAppearanceListItem"
-            app:layout_constraintBottom_toBottomOf="@id/iv_currency"
+            app:layout_constraintBottom_toBottomOf="@id/iv_base_flag"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/iv_currency" />
+            app:layout_constraintTop_toTopOf="@id/iv_base_flag" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

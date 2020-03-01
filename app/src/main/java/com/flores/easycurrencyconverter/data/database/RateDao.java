@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.flores.easycurrencyconverter.data.model.Rate;
 
@@ -17,8 +18,27 @@ public interface RateDao {
     // Always holds/caches latest version of data. Notifies its active observers when the
     // data has changed. Since we are getting all the contents of the database,
     // we are notified whenever any of the database contents have changed.
-    @Query("SELECT * from rates ORDER BY code ASC")
-    LiveData<List<Rate>> getRate();
+    @Query("SELECT * from rates where base = 0 ORDER BY code ASC")
+    LiveData<List<Rate>> getRates();
+
+    // LiveData is a data holder class that can be observed within a given lifecycle.
+    // Always holds/caches latest version of data. Notifies its active observers when the
+    // data has changed. Since we are getting all the contents of the database,
+    // we are notified whenever any of the database contents have changed.
+    @Query("SELECT * from rates where base = 1 LIMIT 1")
+    LiveData<Rate> getBaseRate();
+
+    @Query("SELECT favorite from rates where favorite = 1 LIMIT 1")
+    LiveData<Boolean> isFavorite();
+
+    @Query("SELECT favorite from rates where favorite = 1 LIMIT 1")
+    Boolean isFav();
+
+    @Query("UPDATE rates SET favorite = :newFavorite ")
+    void updateFavorite(int newFavorite);
+
+    @Update
+    void update(List<Rate> rates);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Rate rate);

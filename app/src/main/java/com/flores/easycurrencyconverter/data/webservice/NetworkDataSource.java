@@ -10,6 +10,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.flores.easycurrencyconverter.data.model.Converter;
 import com.flores.easycurrencyconverter.data.model.SymbolsAPI;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,9 +60,9 @@ public class NetworkDataSource {
         return mCurrencyList.getValue();
     }
 
-    public void fetchCurrency() {
+    public void fetchCurrency(List<String> symbols) {
         Log.d(LOG_TAG, "fetchCurrency started");
-        Call<Converter> call = WebserviceClient.getWebservice().getLatest();
+        Call<Converter> call = WebserviceClient.getWebservice().getLatest(symbols);
         call.enqueue(new Callback<Converter>() {
             @Override
             public void onResponse(@NonNull Call<Converter> call, @NonNull Response<Converter> response) {

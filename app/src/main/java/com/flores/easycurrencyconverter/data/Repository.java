@@ -48,8 +48,8 @@ public class Repository {
         return mNetworkDataSource.getCurrency();
     }
 
-    public void fetchCurrency() {
-        mNetworkDataSource.fetchCurrency();
+    public void fetchCurrency(List<String> symbols) {
+        mNetworkDataSource.fetchCurrency(symbols);
     }
 
     public LiveData<List<Symbol>> getSymbols() {
@@ -73,7 +73,15 @@ public class Repository {
     }
 
     public LiveData<List<Rate>> getRates() {
-        return mRoomDatabase.rateDao().getRate();
+        return mRoomDatabase.rateDao().getRates();
+    }
+
+    public LiveData<Rate> getBaseRate() {
+        return mRoomDatabase.rateDao().getBaseRate();
+    }
+
+    public LiveData<Boolean> isFavorite() {
+        return mRoomDatabase.rateDao().isFavorite();
     }
 
     public void insertRate(Rate rate) {
@@ -84,4 +92,15 @@ public class Repository {
         RoomDatabase.databaseWriteExecutor.execute(() -> mRoomDatabase.rateDao().deleteAll());
     }
 
+    public void setFavorite() {
+        RoomDatabase.databaseWriteExecutor.execute(() -> {
+                    Boolean favorite = mRoomDatabase.rateDao().isFav();
+                    mRoomDatabase.rateDao().updateFavorite(favorite == null ? 0 : favorite ? 1 : 0);
+                }
+        );
+    }
+
+    public void updateRates(List<Rate> rates) {
+        RoomDatabase.databaseWriteExecutor.execute(() -> mRoomDatabase.rateDao().update(rates));
+    }
 }

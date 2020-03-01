@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import org.jetbrains.annotations.NotNull;
+
 @Entity(tableName = "rates")
 public class Rate {
 
@@ -19,10 +21,14 @@ public class Rate {
     @ColumnInfo(name = "base")
     private boolean base;
 
-    public Rate(@NonNull String code, Double value, boolean base) {
+    @ColumnInfo(name = "favorite")
+    private boolean favorite;
+
+    public Rate(@NonNull String code, Double value, boolean base, boolean favorite) {
         this.code = code;
         this.value = value;
         this.base = base;
+        this.favorite = favorite;
     }
 
     @NonNull
@@ -48,5 +54,24 @@ public class Rate {
 
     public void setBase(boolean base) {
         this.base = base;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
+    @NotNull
+    @Override
+    public String toString() {
+        return "Rate{" +
+                "code='" + code + '\'' +
+                ", value=" + value +
+                ", base=" + base +
+                ", favorite=" + favorite +
+                '}';
     }
 }
