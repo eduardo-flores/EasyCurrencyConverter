@@ -14,6 +14,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
+
         <activity
             android:name=".AboutActivity"
             android:parentActivityName=".MainActivity" />
@@ -27,6 +28,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".provider.CurrencyContentProvider"
+            android:authorities="com.flores.easycurrencyconverter.provider.quick_currency_provider_app"
+            android:exported="true" />
+
+        <receiver android:name=".widget.CurrencyAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/currency_app_widget_info" />
+        </receiver>
+
+        <service android:name=".widget.RatesService" />
+
+        <service
+            android:name=".widget.ListWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

@@ -25,15 +25,11 @@ public class NetworkDataSource {
     // For Singleton instantiation
     private static final Object LOCK = new Object();
     private static NetworkDataSource sInstance;
-//    private final AppWidgetManager appWidgetManager;
-//    private final int[] appWidgetIds;
 
     private final MutableLiveData<Converter> mCurrencyList;
     private final MutableLiveData<SymbolsAPI> mSymbolsAPI;
 
     private NetworkDataSource(Context context) {
-//        appWidgetManager = AppWidgetManager.getInstance(context);
-//        appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, BakingAppWidget.class));
         mCurrencyList = new MutableLiveData<>();
         mSymbolsAPI = new MutableLiveData<>();
     }
@@ -56,10 +52,6 @@ public class NetworkDataSource {
         return mCurrencyList;
     }
 
-    public Converter getCurrencyWidget() {
-        return mCurrencyList.getValue();
-    }
-
     public void fetchCurrency(List<String> symbols) {
         Log.d(LOG_TAG, "fetchCurrency started");
         Call<Converter> call = WebserviceClient.getWebservice().getLatest(symbols);
@@ -69,8 +61,6 @@ public class NetworkDataSource {
                 Log.d(LOG_TAG, "response code = " + response.code());
                 if (response.isSuccessful()) {
                     mCurrencyList.postValue(response.body());
-                    //Trigger data update to handle the widgets and force a data refresh
-//                    appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.lv_recipe_widget);
                 }
             }
 

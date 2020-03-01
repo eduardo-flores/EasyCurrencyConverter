@@ -136,12 +136,6 @@ public class MainActivity extends AppCompatActivity {
             getIdlingResource().setIdleState(true);
         });
 
-        mViewModel.isFavorite().observe(this, favorite -> {
-            ActionMenuItemView menuItem = findViewById(R.id.action_favorite);
-            if (menuItem != null && favorite != null) {
-                menuItem.setIcon(getDrawable(favorite ? R.drawable.ic_favorite_24dp : R.drawable.ic_favorite_border_24dp));
-            }
-        });
 
         mViewModel.getCurrency().observe(this, converter -> {
             mConverter = converter;
@@ -255,7 +249,11 @@ public class MainActivity extends AppCompatActivity {
             Log.d(LOG_TAG, "action_custom");
             Class destinationClass = DialogActivity.class;
             Intent intent = new Intent(this, destinationClass);
-            intent.putExtra(EXTRA_BASE_CODE, mBaseRate.getCode());
+            if (mBaseRate != null) {
+                intent.putExtra(EXTRA_BASE_CODE, mBaseRate.getCode());
+            } else {
+                intent.putExtra(EXTRA_BASE_CODE, EUR_CODE);
+            }
             startActivity(intent);
             return true;
         }
@@ -275,6 +273,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+
+        // Observe after inflate menu
+        mViewModel.isFavorite().observe(this, favorite -> {
+            ActionMenuItemView menuItem = findViewById(R.id.action_favorite);
+            if (menuItem != null && favorite != null) {
+                menuItem.setIcon(getDrawable(favorite ? R.drawable.ic_favorite_24dp : R.drawable.ic_favorite_border_24dp));
+            }
+        });
         return true;
     }
 

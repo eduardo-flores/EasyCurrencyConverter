@@ -1,5 +1,7 @@
 package com.flores.easycurrencyconverter.data.database;
 
+import android.database.Cursor;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
@@ -45,4 +47,12 @@ public interface RateDao {
 
     @Query("DELETE FROM rates")
     void deleteAll();
+
+    /**
+     * Select rates for content provider
+     *
+     * @return A {@link Cursor} of rates to share with content provider .
+     */
+    @Query("SELECT * FROM rates where favorite = 1")
+    Cursor getRatesProvider();
 }

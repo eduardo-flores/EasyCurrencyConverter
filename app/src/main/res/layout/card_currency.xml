@@ -13,7 +13,7 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_base_flag"
-            android:layout_width="50dp"
+            android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_small"
             android:background="@drawable/border"
