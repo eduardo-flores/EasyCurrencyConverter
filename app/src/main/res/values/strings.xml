@@ -1,17 +1,21 @@
 <resources>
-    <string name="app_name">Easy Currency Converter</string>
+    <string name="app_name">Quick Currency Converter</string>
     <string name="default_value">1.00</string>
     <string name="delete">remove</string>
     <string name="share_using">Share via</string>
     <string name="share_subject">Look at this exchange rate.</string>
-    <string name="share_message">I am using Easy Currency Converter and I want to share with you this currency exchange from %s %.2f to %s %.2f.</string>
-    <string name="share_message_no_base">I am using Easy Currency Converter and I want to share with you this currency %s %.2f.</string>
+    <string name="share_message">I am using Quick Currency Converter and I want to share with you this currency exchange from %s %.2f to %s %.2f.</string>
+    <string name="share_message_no_base">I am using Quick Currency Converter and I want to share with you this currency %s %.2f.</string>
     <string name="menu_favorite">Favorite</string>
     <string name="menu_custom">Customize Currency</string>
     <string name="menu_about">About</string>
     <string name="toast_favorite_enable">Widget enabled</string>
+    <string name="toast_favorite_disable">Widget disabled</string>
     <string name="dialog_custom_title">Customize Currencies</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_confirm">Confirm</string>
     <string name="menu_save">Save</string>
+    <string name="about_text">Easy app to help you to convert many different currencies.\n\nTo help you in travel or saving in exchanges, this app provides you a quick way to see the conversion of your preferred currencies.\n\nDon\'t lose any good conversion rate any more, Quick Currency Converter shows your favorites conversions on your home screen using Quick Currency Converter widget.\n\nFound a good exchange rate and want to share it with friends or families?\nYou can easily use the share option and share the currency conversion that you like with your preferred IM app or e-mail.</string>
+    <string name="app_version">Version 1.0.0</string>
+    <string name="about_title">About</string>
 </resources>

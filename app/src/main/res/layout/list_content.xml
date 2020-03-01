@@ -81,10 +81,10 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_share"
-            android:layout_width="50dp"
+            android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/margin_small"
-            android:src="@drawable/ic_share_black_24dp"
+            android:src="@drawable/ic_share_24dp"
             android:textAppearance="?attr/textAppearanceListItem"
             app:layout_constraintBottom_toBottomOf="@id/iv_place_holder"
             app:layout_constraintEnd_toEndOf="parent"

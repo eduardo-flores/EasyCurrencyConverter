@@ -95,7 +95,7 @@ public class Repository {
     public void setFavorite() {
         RoomDatabase.databaseWriteExecutor.execute(() -> {
                     Boolean favorite = mRoomDatabase.rateDao().isFav();
-                    mRoomDatabase.rateDao().updateFavorite(favorite == null ? 0 : favorite ? 1 : 0);
+            mRoomDatabase.rateDao().updateFavorite(favorite == null ? 0 : favorite ? 0 : 1);
                 }
         );
     }

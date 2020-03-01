@@ -28,10 +28,10 @@ public interface RateDao {
     @Query("SELECT * from rates where base = 1 LIMIT 1")
     LiveData<Rate> getBaseRate();
 
-    @Query("SELECT favorite from rates where favorite = 1 LIMIT 1")
+    @Query("SELECT count(favorite) from rates where favorite = 1 LIMIT 1")
     LiveData<Boolean> isFavorite();
 
-    @Query("SELECT favorite from rates where favorite = 1 LIMIT 1")
+    @Query("SELECT count(favorite) from rates where favorite = 1 LIMIT 1")
     Boolean isFav();
 
     @Query("UPDATE rates SET favorite = :newFavorite ")

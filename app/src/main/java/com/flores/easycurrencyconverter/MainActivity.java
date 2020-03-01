@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         mViewModel.isFavorite().observe(this, favorite -> {
             ActionMenuItemView menuItem = findViewById(R.id.action_favorite);
             if (menuItem != null && favorite != null) {
-                menuItem.setIcon(getDrawable(favorite ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp));
+                menuItem.setIcon(getDrawable(favorite ? R.drawable.ic_favorite_24dp : R.drawable.ic_favorite_border_24dp));
             }
         });
 
@@ -261,7 +261,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_about) {
-//            showData();
+            Log.d(LOG_TAG, "action_about");
+            Class destinationClass = AboutActivity.class;
+            Intent intent = new Intent(this, destinationClass);
+            startActivity(intent);
             return true;
         }
 
