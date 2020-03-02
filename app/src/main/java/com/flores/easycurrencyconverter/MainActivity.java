@@ -32,8 +32,10 @@ import com.flores.easycurrencyconverter.data.model.Rate;
 import com.flores.easycurrencyconverter.data.model.Symbol;
 import com.flores.easycurrencyconverter.util.ResourcesUtil;
 import com.flores.easycurrencyconverter.util.SimpleIdlingResource;
+import com.flores.easycurrencyconverter.util.StringUtil;
 import com.flores.easycurrencyconverter.viewmodel.MainActivityViewModel;
 import com.flores.easycurrencyconverter.viewmodel.MainViewModelFactory;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     };
     private EditText mBaseValue;
 
-
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     // The Idling Resource which will be null in production.
     @Nullable
@@ -86,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
@@ -110,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
                 mCodes = (List<String>) intentThatStartedThisActivity.getSerializableExtra(EXTRA_CODES);
                 if (mCodes != null) {
                     mViewModel.fetchCurrency(mCodes);
+
+                    Bundle params = new Bundle();
+                    params.putString("codes", StringUtil.join(",", mCodes));
+                    mFirebaseAnalytics.logEvent("setting_codes", params);
                 }
             }
         }
@@ -241,6 +250,11 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_favorite) {
+
+            Bundle bundle = new Bundle();
+            bundle.putString("code", mBaseRate.getCode());
+            mFirebaseAnalytics.logEvent("favorite", bundle);
+
             mViewModel.setFavorite();
             Toast.makeText(this, getString(R.string.toast_favorite_changed), Toast.LENGTH_SHORT).show();
             return true;

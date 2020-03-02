@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.flores.easycurrencyconverter.data.model.Converter;
 import com.flores.easycurrencyconverter.data.model.SymbolsAPI;
+import com.flores.easycurrencyconverter.util.StringUtil;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class NetworkDataSource {
 
     public void fetchCurrency(List<String> symbols) {
         Log.d(LOG_TAG, "fetchCurrency started");
-        Call<Converter> call = WebserviceClient.getWebservice().getLatest(join(",", symbols));
+        Call<Converter> call = WebserviceClient.getWebservice().getLatest(StringUtil.join(",", symbols));
         call.enqueue(new Callback<Converter>() {
             @Override
             public void onResponse(@NonNull Call<Converter> call, @NonNull Response<Converter> response) {
@@ -72,18 +73,6 @@ public class NetworkDataSource {
         });
     }
 
-    private static String join(String separator, List<String> input) {
-        if (input == null || input.size() <= 0) return "";
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < input.size(); i++) {
-            sb.append(input.get(i));
-            // if not the last item
-            if (i != input.size() - 1) {
-                sb.append(separator);
-            }
-        }
-        return sb.toString();
-    }
 
     public LiveData<SymbolsAPI> getSymbolsAPI() {
         return mSymbolsAPI;

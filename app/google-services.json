@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "670266240910",
+    "firebase_url": "https://easy-currency-converter-4a82d.firebaseio.com",
+    "project_id": "easy-currency-converter-4a82d",
+    "storage_bucket": "easy-currency-converter-4a82d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:670266240910:android:a9335438a358db4faefedf",
+        "android_client_info": {
+          "package_name": "com.flores.easycurrencyconverter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "670266240910-gppa2a28sb88hq9ngjq91rbjubbpk35k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flores.easycurrencyconverter",
+            "certificate_hash": "f8370ea69e9ebdea8599b7974c2297dc0223f8ce"
+          }
+        },
+        {
+          "client_id": "670266240910-8vqqblkvuhk1uov4tloi8vgjkb5uaa4f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "***REMOVED***"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "670266240910-8vqqblkvuhk1uov4tloi8vgjkb5uaa4f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
